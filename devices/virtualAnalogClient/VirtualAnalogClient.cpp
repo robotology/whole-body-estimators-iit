@@ -230,14 +230,8 @@ ReturnValue VirtualAnalogClient::getJointType(int axis, JointTypeEnum& type)
     return ReturnValue_ok;
 }
 
-ReturnValue VirtualAnalogClient::getAxes(int* ax)
+ReturnValue VirtualAnalogClient::getAxes(size_t& ax)
 {
-    if( !ax )
-    {
-        yError() << "VirtualAnalogClient: getAxes failed : invalid argument passed";
-        return ReturnValue_error_method_failed;
-    }
-
-    *ax = VirtualAnalogClient::getVirtualAnalogSensorChannels();
+    ax = VirtualAnalogClient::getVirtualAnalogSensorChannels();
     return ReturnValue_ok;
 }

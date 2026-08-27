@@ -300,9 +300,13 @@ bool WholeBodyDynamicsDevice::openRemapperControlBoard(os::Searchable& config)
     }
 
     // Check if the controlboard and the estimator have a consistent number of joints
-    int axes = 0;
-    remappedControlBoardInterfaces.encs->getAxes(&axes);
-    if( axes != (int) estimator.model().getNrOfDOFs() )
+    size_t axes = 0;
+    if (!remappedControlBoardInterfaces.encs->getAxes(axes))
+    {
+        yError() << "wholeBodyDynamics : failed to get the number of axes from the remapped control board";
+        return false;
+    }
+    if( axes != estimator.model().getNrOfDOFs() )
     {
         yError() << "wholeBodyDynamics : open estimator model and the remappedControlBoard has an inconsistent number of joints";
         return false;

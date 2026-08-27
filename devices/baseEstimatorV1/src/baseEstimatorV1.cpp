@@ -108,9 +108,13 @@ bool yarp::dev::baseEstimatorV1::loadLeggedOdometry()
         return false;
     }
 
-    int axes{0};
-    m_remapped_control_board_interfaces.encs->getAxes(&axes);
-    if (axes != (int)m_legged_odometry->model().getNrOfDOFs())
+    size_t axes{0};
+    if (!m_remapped_control_board_interfaces.encs->getAxes(axes))
+    {
+        yError() << "floatingBaseEstimatorV1: " << "failed to get the number of axes from the remapped control board";
+        return false;
+    }
+    if (axes != m_legged_odometry->model().getNrOfDOFs())
     {
         yError() << "floatingBaseEstimatorV1: " <<  "estimator model and remapped control board interface has inconsistent number of joints";
         return false;
@@ -1063,4 +1067,3 @@ bool yarp::dev::baseEstimatorV1::useJointVelocityLPF(const bool flag)
     m_use_lpf = flag;
     return true;
 }
-

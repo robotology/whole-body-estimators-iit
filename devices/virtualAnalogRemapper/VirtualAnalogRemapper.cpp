@@ -345,14 +345,8 @@ yarp::dev::ReturnValue VirtualAnalogRemapper::getJointType(int axis, JointTypeEn
     return ret;
 }
 
-yarp::dev::ReturnValue VirtualAnalogRemapper::getAxes(int* ax)
+yarp::dev::ReturnValue VirtualAnalogRemapper::getAxes(size_t& ax)
 {
-    if( !ax )
-    {
-        yError() << "VirtualAnalogRemapper: getAxes failed : invalid argument passed";
-        return yarp::dev::ReturnValue_error_generic;
-    }
-
-    *ax = this->m_axesNames.size();
+    ax = this->m_axesNames.size();
     return yarp::dev::ReturnValue_ok;
 }
