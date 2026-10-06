@@ -12,7 +12,7 @@ on:
   schedule:
   # * is a special character in YAML so you have to quote this string
   # Execute a "nightly" build twice a week 2 AM UTC
-  - cron:  '0 2 * * 2,5'
+  # - cron:  '0 2 * * 2,5'
 
 jobs:
   build-with-pixi:
