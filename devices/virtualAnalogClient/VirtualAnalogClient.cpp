@@ -78,11 +78,11 @@ bool VirtualAnalogClient::open(Searchable& config)
             std::string type = AxisTypeBot->get(jnt).asString();
             if (type == "revolute")
             {
-                m_axisType[jnt] = VOCAB_JOINTTYPE_REVOLUTE;
+                m_axisType[jnt] = yarp::dev::JointTypeEnum::VOCAB_JOINTTYPE_REVOLUTE;
             }
             else if (type == "prismatic")
             {
-                m_axisType[jnt] = VOCAB_JOINTTYPE_UNKNOWN;
+                m_axisType[jnt] = yarp::dev::JointTypeEnum::VOCAB_JOINTTYPE_UNKNOWN;
             }
             else
             {
@@ -95,7 +95,7 @@ bool VirtualAnalogClient::open(Searchable& config)
     {
         for(size_t jnt=0; jnt < m_axisType.size(); jnt++)
         {
-            m_axisType[jnt] = VOCAB_JOINTTYPE_REVOLUTE;
+            m_axisType[jnt] = yarp::dev::JointTypeEnum::VOCAB_JOINTTYPE_REVOLUTE;
         }
     }
 
@@ -205,39 +205,33 @@ VAS_status VirtualAnalogClient::getVirtualAnalogSensorStatus(int /*ch*/)
     return yarp::dev::VAS_status::VAS_OK;
 }
 
-bool VirtualAnalogClient::getAxisName(int axis, std::string& name)
+ReturnValue VirtualAnalogClient::getAxisName(int axis, std::string& name)
 {
     if( axis < 0 || axis >= this->getVirtualAnalogSensorChannels() )
     {
         yError() << "VirtualAnalogClient: getAxisName failed : requested axis " << axis << " while the client is configured with " << this->getVirtualAnalogSensorChannels() << " channels";
-        return false;
+        return ReturnValue_error_method_failed;
     }
 
     name = m_axisName[axis];
 
-    return true;
+    return ReturnValue_ok;
 }
 
-bool VirtualAnalogClient::getJointType(int axis, JointTypeEnum& type)
+ReturnValue VirtualAnalogClient::getJointType(int axis, JointTypeEnum& type)
 {
     if( axis < 0 || axis >= this->getVirtualAnalogSensorChannels() )
     {
         yError() << "VirtualAnalogClient: getJointType failed : requested axis " << axis << " while the client is configured with " << this->getVirtualAnalogSensorChannels() << " channels";
-        return false;
+        return ReturnValue_error_method_failed;
     }
 
     type = m_axisType[axis];
-    return true;
+    return ReturnValue_ok;
 }
 
-bool VirtualAnalogClient::getAxes(int* ax)
+ReturnValue VirtualAnalogClient::getAxes(size_t& ax)
 {
-    if( !ax )
-    {
-        yError() << "VirtualAnalogClient: getAxes failed : invalid argument passed";
-        return false;
-    }
-
-    *ax = VirtualAnalogClient::getVirtualAnalogSensorChannels();
-    return true;
+    ax = VirtualAnalogClient::getVirtualAnalogSensorChannels();
+    return ReturnValue_ok;
 }

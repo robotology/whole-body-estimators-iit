@@ -300,9 +300,13 @@ bool WholeBodyDynamicsDevice::openRemapperControlBoard(os::Searchable& config)
     }
 
     // Check if the controlboard and the estimator have a consistent number of joints
-    int axes = 0;
-    remappedControlBoardInterfaces.encs->getAxes(&axes);
-    if( axes != (int) estimator.model().getNrOfDOFs() )
+    size_t axes = 0;
+    if (!remappedControlBoardInterfaces.encs->getAxes(axes))
+    {
+        yError() << "wholeBodyDynamics : failed to get the number of axes from the remapped control board";
+        return false;
+    }
+    if( axes != estimator.model().getNrOfDOFs() )
     {
         yError() << "wholeBodyDynamics : open estimator model and the remappedControlBoard has an inconsistent number of joints";
         return false;
@@ -2653,18 +2657,18 @@ void WholeBodyDynamicsDevice::publishGravityCompensation()
         {
             size_t dof = m_gravityCompesationJoints[ii];
 
-            int ctrl_mode=0;
+            yarp::dev::ControlModeEnum ctrl_mode= yarp::dev::ControlModeEnum::VOCAB_CM_UNKNOWN;
             yarp::dev::InteractionModeEnum int_mode;
-            remappedControlBoardInterfaces.ctrlmode->getControlMode(dof,&ctrl_mode);
-            remappedControlBoardInterfaces.intmode->getInteractionMode(dof,&int_mode);
+            remappedControlBoardInterfaces.ctrlmode->getControlMode(dof,ctrl_mode);
+            remappedControlBoardInterfaces.intmode->getInteractionMode(dof,int_mode);
 
             switch(ctrl_mode)
             {
-                case VOCAB_CM_POSITION:
-                case VOCAB_CM_POSITION_DIRECT:
-                case VOCAB_CM_MIXED:
-                case VOCAB_CM_VELOCITY:
-                     if (int_mode == VOCAB_IM_COMPLIANT)
+                case yarp::dev::ControlModeEnum::VOCAB_CM_POSITION:
+                case yarp::dev::ControlModeEnum::VOCAB_CM_POSITION_DIRECT:
+                case yarp::dev::ControlModeEnum::VOCAB_CM_MIXED:
+                case yarp::dev::ControlModeEnum::VOCAB_CM_VELOCITY:
+                     if (int_mode == yarp::dev::InteractionModeEnum::VOCAB_IM_COMPLIANT)
                      {
                          remappedControlBoardInterfaces.impctrl->setImpedanceOffset((int)dof,this->m_gravityCompensationTorques(dof));
                      }

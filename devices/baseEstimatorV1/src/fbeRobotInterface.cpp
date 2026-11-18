@@ -370,7 +370,6 @@ bool yarp::dev::baseEstimatorV1::readFTSensors(bool verbose)
 
 bool yarp::dev::baseEstimatorV1::readEncoders(bool verbose)
 {
-    int ax; m_remapped_control_board_interfaces.encs->getAxes(&ax);
     bool encoders_read_correctly = m_remapped_control_board_interfaces.encs->getEncoders(m_joint_positions.data());
 
     encoders_read_correctly = m_remapped_control_board_interfaces.encs->getEncoderSpeeds(m_joint_velocities.data()) && encoders_read_correctly;
@@ -573,4 +572,3 @@ bool yarp::dev::baseEstimatorV1::detachAll()
     m_device_initialized_correctly = false;
     return true;
 }
-
